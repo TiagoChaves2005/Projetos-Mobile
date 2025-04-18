@@ -1,0 +1,45 @@
+package com.example.atividade_eleitoral;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class ProblemasActivity extends AppCompatActivity {
+
+    private EditText edProblema1, edProblema2, edProblema3;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_problemas);
+
+        edProblema1 = findViewById(R.id.edProblema1);
+        edProblema2 = findViewById(R.id.edProblema2);
+        edProblema3 = findViewById(R.id.edProblema3);
+        Button btnSeguinte = findViewById(R.id.btnSeguinteProblemas);
+
+        btnSeguinte.setOnClickListener(v -> {
+            String problema1 = edProblema1.getText().toString().trim();
+            String problema2 = edProblema2.getText().toString().trim();
+            String problema3 = edProblema3.getText().toString().trim();
+
+            Intent intent = new Intent(this, CadastroEntrevistadoActivity.class);
+
+            // Recebendo dados anteriores
+            String candidatoEspontaneo = getIntent().getStringExtra("candidatoEspontaneo");
+            String candidatoEstimulada = getIntent().getStringExtra("candidatoEstimulada");
+
+            // Enviando todos os dados pra próxima tela
+            intent.putExtra("candidatoEspontaneo", candidatoEspontaneo);
+            intent.putExtra("candidatoEstimulada", candidatoEstimulada);
+            intent.putExtra("problema1", problema1);
+            intent.putExtra("problema2", problema2);
+            intent.putExtra("problema3", problema3);
+
+            startActivity(intent);
+        });
+    }
+}
