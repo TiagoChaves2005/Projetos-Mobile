@@ -1,0 +1,38 @@
+package com.example.atividade_eleitoral;
+
+public class Entrevista {
+    public String candidatoEspontaneo;
+    public String candidatoEstimulada;
+    public String problema1;
+    public String problema2;
+    public String problema3;
+    public String data;
+    public String hora;
+    public String local;
+
+    public Entrevista(String candidatoEspontaneo, String candidatoEstimulada,
+                      String problema1, String problema2, String problema3,
+                      String data, String hora, String local) {
+        this.candidatoEspontaneo = candidatoEspontaneo;
+        this.candidatoEstimulada = candidatoEstimulada;
+        this.problema1 = problema1;
+        this.problema2 = problema2;
+        this.problema3 = problema3;
+        this.data = data;
+        this.hora = hora;
+        this.local = local;
+    }
+
+    public String getResumoFormatado() {
+        return "🗳 Candidato Espontâneo: " + candidatoEspontaneo + "\n" +
+                "📸 Candidato Estimulado: " + candidatoEstimulada + "\n" +
+                "🏙 Problemas:\n" +
+                "1. " + problema1 + "\n" +
+                "2. " + problema2 + "\n" +
+                "3. " + problema3 + "\n" +
+                "📍 Local: " + local + "\n" +
+                "📅 Data: " + data + "\n" +
+                "⏰ Hora: " + hora + "\n\n--------------------------\n\n";
+    }
+
+}
