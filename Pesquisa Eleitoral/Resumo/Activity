@@ -1,0 +1,68 @@
+package com.example.atividade_eleitoral;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class ResumoActivity extends AppCompatActivity {
+
+    private TextView tvResumo;
+    private Button btnNovaEntrevista;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_resumo);
+
+        tvResumo = findViewById(R.id.tvResumo);
+        btnNovaEntrevista = findViewById(R.id.btnNovaEntrevista);
+
+        // Dados recebidos da Intent
+        String candidatoEspontaneo = getIntent().getStringExtra("candidatoEspontaneo");
+        String candidatoEstimulada = getIntent().getStringExtra("candidatoEstimulada");
+        String problema1 = getIntent().getStringExtra("problema1");
+        String problema2 = getIntent().getStringExtra("problema2");
+        String problema3 = getIntent().getStringExtra("problema3");
+        String local = getIntent().getStringExtra("local");
+        String data = getIntent().getStringExtra("data");
+        String hora = getIntent().getStringExtra("hora");
+
+        // Cria uma nova entrevista com os dados recebidos
+        Entrevista entrevista = new Entrevista(
+                candidatoEspontaneo,
+                candidatoEstimulada,
+                problema1,
+                problema2,
+                problema3,
+                data,
+                hora,
+                local
+        );
+
+        // Adiciona à lista global
+        BancoMemoria.getInstance().adicionarEntrevista(entrevista);
+
+        // Monta o resumo com todas as entrevistas
+        StringBuilder resumoCompleto = new StringBuilder();
+        for (Entrevista e : BancoMemoria.getInstance().getEntrevistas()) {
+            resumoCompleto.append(e.getResumoFormatado());
+        }
+
+        tvResumo.setText(resumoCompleto.toString());
+
+        // Volta ao início
+        btnNovaEntrevista.setOnClickListener(view -> {
+            Intent intent = new Intent(ResumoActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        });
+    }
+}
