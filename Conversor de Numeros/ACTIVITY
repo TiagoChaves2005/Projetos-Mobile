@@ -1,0 +1,92 @@
+package com.example.conversornumeros;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    Button btConverter, btBaseOrigem, btBaseDestino;
+    TextView tvConvertida, tvBaseOrigem, tvBaseDestino;
+    EditText edNum;
+    String baseOrigem = "Decimal";
+    String baseDestino = "Binário";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        btConverter = findViewById(R.id.btConverter);
+        btBaseOrigem = findViewById(R.id.btBaseOrigem);
+        btBaseDestino = findViewById(R.id.btBaseDestino);
+        tvConvertida = findViewById(R.id.tvConvertida);
+        tvBaseOrigem = findViewById(R.id.tvBaseOrigem);
+        tvBaseDestino = findViewById(R.id.tvBaseDestino);
+        edNum = findViewById(R.id.edNum);
+
+        tvBaseOrigem.setText(baseOrigem);
+        tvBaseDestino.setText(baseDestino);
+
+        btBaseOrigem.setOnClickListener(v -> escolherBase(true));
+        btBaseDestino.setOnClickListener(v -> escolherBase(false));
+        btConverter.setOnClickListener(v -> converterNumero());
+    }
+
+    private void escolherBase(boolean isOrigem) {
+        String[] bases = {"Decimal", "Binário", "Octal", "Hexadecimal"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Escolha a base");
+        builder.setItems(bases, (dialog, which) -> {
+            if (isOrigem) {
+                baseOrigem = bases[which];
+                tvBaseOrigem.setText(baseOrigem);
+            } else {
+                baseDestino = bases[which];
+                tvBaseDestino.setText(baseDestino);
+            }
+        });
+        builder.show();
+    }
+
+    private void converterNumero() {
+        try {
+            String input = edNum.getText().toString().trim();
+            if (input.isEmpty()) {
+                tvConvertida.setText("Digite um número");
+                return;
+            }
+
+            int numeroDecimal = converterParaDecimal(input, baseOrigem);
+            String resultado = converterDeDecimal(numeroDecimal, baseDestino);
+            tvConvertida.setText(resultado);
+        } catch (Exception e) {
+            tvConvertida.setText("Erro na conversão");
+        }
+    }
+
+    private int converterParaDecimal(String numero, String base) {
+        switch (base) {
+            case "Decimal": return Integer.parseInt(numero);
+            case "Binário": return Integer.parseInt(numero, 2);
+            case "Octal": return Integer.parseInt(numero, 8);
+            case "Hexadecimal": return Integer.parseInt(numero, 16);
+            default: throw new IllegalArgumentException("Base inválida");
+        }
+    }
+
+    private String converterDeDecimal(int numero, String base) {
+        switch (base) {
+            case "Decimal": return String.valueOf(numero);
+            case "Binário": return Integer.toBinaryString(numero);
+            case "Octal": return Integer.toOctalString(numero);
+            case "Hexadecimal": return Integer.toHexString(numero).toUpperCase();
+            default: throw new IllegalArgumentException("Base inválida");
+        }
+    }
+}
+
