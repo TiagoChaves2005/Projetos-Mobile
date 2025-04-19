@@ -1,0 +1,29 @@
+package com.example.atividade_eleitoral;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class BancoMemoria {
+
+private static BancoMemoria instancia;
+private List<Entrevista> entrevistas;
+
+private BancoMemoria() {
+    entrevistas = new ArrayList<>();
+}
+
+public static BancoMemoria getInstance() {
+    if (instancia == null) {
+        instancia = new BancoMemoria();
+    }
+    return instancia;
+}
+
+public void adicionarEntrevista(Entrevista entrevista) {
+    entrevistas.add(entrevista);
+}
+
+public List<Entrevista> getEntrevistas() {
+    return entrevistas;
+}
+}
