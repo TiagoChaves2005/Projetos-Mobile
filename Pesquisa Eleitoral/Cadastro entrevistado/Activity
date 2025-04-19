@@ -1,0 +1,104 @@
+package com.example.atividade_eleitoral;
+
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+import java.util.Calendar;
+
+public class CadastroEntrevistadoActivity extends AppCompatActivity {
+
+    private EditText etNome, etCelular, etData, etHora, etLocal;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_cadastro_entrevistado);
+
+        etNome = findViewById(R.id.etNome);
+        etCelular = findViewById(R.id.etCelular);
+        etData = findViewById(R.id.etData);
+        etHora = findViewById(R.id.etHora);
+        etLocal = findViewById(R.id.etLocal);
+        Button btnCadastrar = findViewById(R.id.btnCadastrar);
+
+        etHora.setOnClickListener(view -> {
+            // Pegando hora atual como padrão
+            final Calendar c = Calendar.getInstance();
+            int hour = c.get(Calendar.HOUR_OF_DAY);
+            int minute = c.get(Calendar.MINUTE);
+
+            TimePickerDialog timePickerDialog = new TimePickerDialog(
+                    CadastroEntrevistadoActivity.this,
+                    (view1, hourOfDay, minute1) -> {
+                        String horaFormatada = String.format("%02d:%02d", hourOfDay, minute1);
+                        etHora.setText(horaFormatada);
+                    },
+                    hour,
+                    minute,
+                    true // formato 24h
+            );
+
+            timePickerDialog.show();
+        });
+
+        etData.setOnClickListener(view -> {
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(
+                    CadastroEntrevistadoActivity.this,
+                    (view1, year1, month1, dayOfMonth) -> {
+                        // Lembre-se: mês começa do zero (janeiro = 0)
+                        String dataFormatada = String.format("%02d/%02d/%04d", dayOfMonth, month1 + 1, year1);
+                        etData.setText(dataFormatada);
+                    },
+                    year,
+                    month,
+                    day
+            );
+
+            datePickerDialog.show();
+        });
+
+        btnCadastrar.setOnClickListener(v -> {
+            // Pegando dados anteriores
+            String candidatoEspontaneo = getIntent().getStringExtra("candidatoEspontaneo");
+            String candidatoEstimulada = getIntent().getStringExtra("candidatoEstimulada");
+            String problema1 = getIntent().getStringExtra("problema1");
+            String problema2 = getIntent().getStringExtra("problema2");
+            String problema3 = getIntent().getStringExtra("problema3");
+
+            // (Pegando os dados do entrevistado — que não serão enviados para o resumo)
+            String nome = etNome.getText().toString().trim();
+            String celular = etCelular.getText().toString().trim();
+            String data = etData.getText().toString().trim();
+            String hora = etHora.getText().toString().trim();
+            String local = etLocal.getText().toString().trim();
+
+            // Enviando para tela de resumo (sem identificação)
+            Intent intent = new Intent(this, ResumoActivity.class);
+            intent.putExtra("candidatoEspontaneo", candidatoEspontaneo);
+            intent.putExtra("candidatoEstimulada", candidatoEstimulada);
+            intent.putExtra("problema1", problema1);
+            intent.putExtra("problema2", problema2);
+            intent.putExtra("problema3", problema3);
+            intent.putExtra("local", local);
+            intent.putExtra("data", data);
+            intent.putExtra("hora", hora);
+
+            startActivity(intent);
+        });
+    }
+}
