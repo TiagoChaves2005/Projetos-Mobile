@@ -1,0 +1,106 @@
+package com.example.quiz;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    private TextView questionText, scoreText;
+    private Button option1, option2, option3, option4;
+
+    private int currentQuestionIndex = 0;
+    private int score = 0;
+
+    private String[] questions = {
+            "Qual é a capital do Brasil?",
+            "Qual é o maior planeta do sistema solar?",
+            "Quem escreveu 'Dom Casmurro'?",
+            "Qual é a fórmula da água?",
+            "Em que continente está o Egito?",
+            "Quantos dias tem um ano bissexto?",
+            "Quem pintou a Mona Lisa?",
+            "Quanto é 7 x 8?",
+            "Qual é o metal líquido à temperatura ambiente?",
+            "Qual é o símbolo químico do ouro?"
+    };
+
+    private String[][] options = {
+            {"Rio de Janeiro", "São Paulo", "Brasília", "Salvador"},
+            {"Terra", "Júpiter", "Marte", "Saturno"},
+            {"Machado de Assis", "Carlos Drummond", "Clarice Lispector", "Graciliano Ramos"},
+            {"H2O", "CO2", "NaCl", "O2"},
+            {"Ásia", "Europa", "África", "América do Sul"},
+            {"365", "366", "364", "367"},
+            {"Van Gogh", "Leonardo da Vinci", "Picasso", "Michelangelo"},
+            {"56", "54", "48", "64"},
+            {"Mercúrio", "Ferro", "Chumbo", "Zinco"},
+            {"Ag", "Au", "Fe", "Pb"}
+    };
+
+    private int[] correctAnswers = {2, 1, 0, 0, 2, 1, 1, 0, 0, 1};
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        questionText = findViewById(R.id.question_text);
+        scoreText = findViewById(R.id.score_text);
+        option1 = findViewById(R.id.option1);
+        option2 = findViewById(R.id.option2);
+        option3 = findViewById(R.id.option3);
+        option4 = findViewById(R.id.option4);
+
+        setQuestion();
+
+        View.OnClickListener answerListener = v -> {
+            Button selectedButton = (Button) v;
+            int selectedIndex = Integer.parseInt((String) selectedButton.getTag());
+            checkAnswer(selectedIndex);
+            nextQuestion();
+        };
+
+        option1.setOnClickListener(answerListener);
+        option2.setOnClickListener(answerListener);
+        option3.setOnClickListener(answerListener);
+        option4.setOnClickListener(answerListener);
+    }
+
+    private void setQuestion() {
+        if (currentQuestionIndex < questions.length) {
+            questionText.setText(questions[currentQuestionIndex]);
+            option1.setText(options[currentQuestionIndex][0]);
+            option2.setText(options[currentQuestionIndex][1]);
+            option3.setText(options[currentQuestionIndex][2]);
+            option4.setText(options[currentQuestionIndex][3]);
+            option1.setTag("0");
+            option2.setTag("1");
+            option3.setTag("2");
+            option4.setTag("3");
+            scoreText.setText("Pontuação: " + score);
+        } else {
+            questionText.setText("Fim do quiz! Pontuação final: " + score + "/" + questions.length);
+            option1.setVisibility(View.GONE);
+            option2.setVisibility(View.GONE);
+            option3.setVisibility(View.GONE);
+            option4.setVisibility(View.GONE);
+        }
+    }
+
+    private void checkAnswer(int selectedIndex) {
+        if (selectedIndex == correctAnswers[currentQuestionIndex]) {
+            score++;
+        }
+    }
+
+    private void nextQuestion() {
+        currentQuestionIndex++;
+        setQuestion();
+    }
+}
+
+
